@@ -20,6 +20,7 @@ export default function InfoSection({ infoHeader, infoParagraph, socialIcons }: 
   }
 
   return (
+    // @ts-ignore
     <ScrollTrigger onEnter={onEnterViewport}>
       <div id="info-section" className={`md:grid md:grid-cols-2 items-center ml-20 mt-10 md:mt-0 flex flex-col
       md:transition-all transition-opacity duration-500 ease-in-out 

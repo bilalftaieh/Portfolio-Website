@@ -35,6 +35,7 @@ export default function ProjectSection({ projectPage }: ProjectSectionProps) {
                 <p className={`header text-4xl font-bold ${montserrat_700.className}`}>{projectSectionHeader}</p>
                 <p className="description text-base text-gray-400">{projectSectionDescription}</p>
             </div>
+            {/* @ts-ignore */}
             <ScrollTrigger onEnter={onEnterViewport} onExit={onExitViewport}>
                 <div className="flex flex-wrap gap-y-5 gap-x-28">
                     {personalProjects.map((project: Project, index: number) => {
