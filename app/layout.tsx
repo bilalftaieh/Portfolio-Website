@@ -9,7 +9,7 @@ import AppFooter from '@/components/AppFooter'
 import { fetchPages } from '@/lib/butterCmsApi'
 
 export const metadata: Metadata = {
-  title: 'Belal Alfutayh Portfolio Website',
+  title: 'Belal Alfutayh | Portfolio Website',
   description: 'Belal Alfutayh Portfolio Website that includes everything about him',
 }
 
@@ -30,10 +30,10 @@ export default async function RootLayout({
           crossOrigin='anonymous'
         />
       </head>
-      <body className={`${montserrat_400.className} antialiased absolute 
-       md:relative md:w-full bg-custom-one text-white`}>
+      <body className={`${montserrat_400.className} antialiased
+        bg-custom-one text-white`}>
         <Providers>
-        <div className='flex flex-col'>
+        <div className='flex flex-col overflow-hidden'>
           <AppHeader/>
           {children}
           <Divider className="bg-custom-three mt-5"/>

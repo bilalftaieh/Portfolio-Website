@@ -9,7 +9,18 @@ export type Project = {
 export type SocialIcon = {
     social_name: string;
     social_link: string;
-    "social-fa-icon-type"?: string;
-    "social-fa-icon-name"?: string;
-    icon_url?: string;
+    social_fa_icon_type: string;
+    social_fa_icon_name: string;
+    social_fa_icon_color: string
+    icon_url: string;
+    icon_height: number;
+    icon_width: number;
 };
+
+export type Journey = {
+    journey_name: string;
+    journey_description: string;
+    journey_start_date: string;
+    journey_end_date: string;
+    journey_image: string;
+}

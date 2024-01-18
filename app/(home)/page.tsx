@@ -1,6 +1,6 @@
-import InfoSection from "@/components/ui/homepage/InfoSection";
-import ProjectSection from "@/components/ui/homepage/ProjectSection";
-import { fetchPages} from "@/lib/butterCmsApi";
+import InfoSection from "@/components/ui/home/InfoSection";
+import ProjectSection from "@/components/ui/home/ProjectSection";
+import { fetchPages } from "@/lib/butterCmsApi";
 import { Divider } from "@nextui-org/react";
 
 export default async function HomePage() {
@@ -13,7 +13,7 @@ export default async function HomePage() {
 
 
   return (
-    <div className="flex flex-col space-y-7">
+    <div className="flex flex-col gap-6 p-6">
       <InfoSection infoHeader={infoHeader} infoParagraph={infoDescription}
         socialIcons={socialIcons} />
       <Divider className="bg-custom-three" />

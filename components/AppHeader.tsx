@@ -10,7 +10,8 @@ import { alegreya_700 } from '@/lib/fonts';
 
 export default function AppHeader() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const items = [{ name: 'ABOUT', href: '' }, { name: 'PROJECTS', href: '' }]
+  const items = [{ name: 'HOME', href: '/' }, { name: 'ABOUT', href: '/about' },
+  { name: 'PROJECTS', href: '' }]
   return (
     <Navbar className='bg-transparent border-custom-three w-full' isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen} isBordered
@@ -31,21 +32,17 @@ export default function AppHeader() {
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
-          <Popover placement="bottom" showArrow={true} color='primary'>
-            <PopoverTrigger>
-              <p className='text-gray-600 text-lg'>{items[0].name}</p>
-            </PopoverTrigger>
-            <PopoverContent>
-              <p>Under Development</p>
-            </PopoverContent>
-          </Popover>
+          <Link href={items[1].href}>
+            <p className='text-custom-two text-lg hover:text-gray-400'>{items[1].name}</p>
+          </Link>
+
         </NavbarItem>
 
 
         <NavbarItem>
           <Popover placement="bottom" showArrow={true} color='primary'>
             <PopoverTrigger>
-              <p className='text-gray-600 text-lg'>{items[1].name}</p>
+              <p className='text-gray-600 text-lg'>{items[2].name}</p>
             </PopoverTrigger>
             <PopoverContent>
               <p>Under Development</p>
