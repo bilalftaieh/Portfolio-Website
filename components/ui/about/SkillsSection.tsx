@@ -49,7 +49,6 @@ const SkillListSection: React.FC<{ skills: SocialIcon[], listName: string }> = (
     <div className="skill-list-section flex flex-col items-center gap-5 ">
         <h2 className="text-2xl font-bold">{listName}</h2>
         {skills.map((skill, index) => {
-            console.log(skill);
             return (
                 <SocialIconComponent
                     key={`${skill.social_name}-${index}`}

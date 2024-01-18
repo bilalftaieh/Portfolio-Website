@@ -2,7 +2,7 @@ import { Journey } from '@/lib/definitions';
 import { useState } from 'react';
 import ScrollTrigger from 'react-scroll-trigger';
 import { format } from 'date-fns';
-import DOMPurify from 'dompurify';
+import DOMPurify from "isomorphic-dompurify";
 import { Image } from '@nextui-org/react';
 
 export default function JourneyComponent({ journey }: { journey: Journey }) {

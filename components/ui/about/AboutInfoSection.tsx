@@ -1,7 +1,7 @@
 'use client'
 import { useState } from "react";
 import ScrollTrigger from "react-scroll-trigger";
-import DOMPurify from "dompurify";
+import DOMPurify from "isomorphic-dompurify";
 import Link from "next/link";
 import { Image } from "@nextui-org/react";
 import { montserrat_700 } from "@/lib/fonts";
