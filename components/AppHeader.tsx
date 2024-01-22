@@ -4,16 +4,15 @@ import Link from 'next/link';
 import {
   Navbar, NavbarBrand, NavbarContent,
   NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem,
-  Popover, PopoverTrigger, PopoverContent
 } from "@nextui-org/react";
 import { alegreya_700 } from '@/lib/fonts';
 
 export default function AppHeader() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const items = [{ name: 'HOME', href: '/' }, { name: 'ABOUT', href: '/about' },
-  { name: 'PROJECTS', href: '' }]
+  { name: 'PROJECTS', href: '/projects' }]
   return (
-    <Navbar className='bg-transparent border-custom-three w-full' isMenuOpen={isMenuOpen}
+    <Navbar className='bg-transparent border-custom-three' isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen} isBordered
       shouldHideOnScroll isBlurred={false}>
 
@@ -40,14 +39,9 @@ export default function AppHeader() {
 
 
         <NavbarItem>
-          <Popover placement="bottom" showArrow={true} color='primary'>
-            <PopoverTrigger>
-              <p className='text-gray-600 text-lg'>{items[2].name}</p>
-            </PopoverTrigger>
-            <PopoverContent>
-              <p>Under Development</p>
-            </PopoverContent>
-          </Popover>
+          <Link href={items[2].href}>
+            <p className='text-custom-two text-lg hover:text-gray-400'>{items[2].name}</p>
+          </Link>
         </NavbarItem>
       </NavbarContent>
 

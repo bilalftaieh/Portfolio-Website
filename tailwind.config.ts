@@ -17,6 +17,7 @@ const config: Config = {
       },
       colors : {
         'custom-one': '#14181C',
+        'custom-one-light' : '#2C3038',
         'custom-two':'#D8E0E8',
         'custom-three' : '#1E2328'
       }

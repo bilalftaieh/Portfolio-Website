@@ -30,15 +30,15 @@ export default function ProjectCard({ name, description, sourceLink, logo, sourc
         <p className="text-gray-400">{description}</p>
       </CardBody>
       <Divider className="bg-white" />
-      <CardFooter>
+      {/* <CardFooter>
         <Link
           isExternal
           showAnchorIcon
-          href={sourceRepoLink}
+          href={'/pro'}
         >
-          Visit source code on GitHub.
+          View More
         </Link>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   )
 }

@@ -4,19 +4,20 @@ import ScrollTrigger from 'react-scroll-trigger';
 import { Project } from "@/lib/definitions";
 import { montserrat_700 } from "@/lib/fonts";
 import ProjectCard from "@/components/ProjectCard";
+import Link from 'next/link';
 
-interface ProjectSectionProps {
-    projectPage: {
-        header: string;
-        description: string;
-        personal_projects: Project[]
+interface HomeProjectDataProps {
+    projectData: {
+        homeProjectSectionHeader: string;
+        homeProjectSectionDescription: string;
+        homeProjectSectionProjects: Project[]
     }
 }
 
-const ProjectSection: React.FC<ProjectSectionProps> = ({ projectPage }) => {
-    const projectSectionHeader = projectPage.header;
-    const projectSectionDescription = projectPage.description;
-    const personalProjects = projectPage.personal_projects;
+const ProjectSection: React.FC<HomeProjectDataProps> = ({ projectData }) => {
+    const projectSectionHeader = projectData.homeProjectSectionHeader;
+    const projectSectionDescription = projectData.homeProjectSectionDescription;
+    const personalProjects = projectData.homeProjectSectionProjects;
     const [isVisible, setIsVisible] = useState(false);
 
     const handleEnterViewport = () => setIsVisible(true);
@@ -35,7 +36,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ projectPage }) => {
 }
 
 const ProjectHeader: React.FC<{ header: string, description: string }> = ({ header, description }) => (
-    <div className="project-header-container flex flex-col items-center max-w-md space-y-3">
+    <div className="project-header-container flex flex-col max-w-md space-y-3">
         <p className={`project-header text-4xl font-bold ${montserrat_700.className}`}>{header}</p>
         <p className="project-description text-base text-gray-400">{description}</p>
     </div>
@@ -46,11 +47,18 @@ const ProjectCards: React.FC<{ projects: Project[] }> = ({ projects }) => (
         {projects.map((project: Project, index: number) => (
             <ProjectCard key={`${project.project_name}-${index}`}
                 name={project.project_name}
-                description={project.project_description}
+                description={project.project_overview}
                 sourceLink={project.project_website_link}
                 logo={project.project_logo}
                 sourceRepoLink={project.project_github_link} />
         ))}
+        <Link href={'/projects'}>
+            <div className='flex flex-row gap-3 items-center hover:text-gray-400'>
+                <p>View More Projects</p>
+                <i className="fa-solid fa-arrow-right"></i>
+            </div>
+        </Link>
+
     </div>
 );
 

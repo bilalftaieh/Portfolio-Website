@@ -1,9 +1,15 @@
 export type Project = {
+    meta:{
+        id: number;
+    }
+    project_overview:string;
     project_name: string;
     project_description: string;
     project_website_link: string;
     project_github_link: string
     project_logo: string;
+    project_screenshot:string;
+    technologies_used : SocialIcon[]
 }
 
 export type SocialIcon = {

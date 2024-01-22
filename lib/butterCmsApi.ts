@@ -27,10 +27,10 @@ export async function fetchPages() {
     }
 }
 
-export async function fetchProjectSection() {
-    console.log(`Fetching ${requestParams.pages}`)
+export async function fetchProjects() {
+    console.log(`Fetching ${requestParams.personalProjects}`)
     try {
-        const response = await fetch(`${requestParams.pages}`,
+        const response = await fetch(`${requestParams.personalProjects}`,
             {
                 cache: 'no-cache'
             }
@@ -40,7 +40,7 @@ export async function fetchProjectSection() {
         }
         // await new Promise((resolve) => setTimeout(resolve, 3000));
         const data = await response.json();
-        return data.data.fields.my_portfolio_project[1];
+        return data.data.personal_software_projects;
     } catch (e) {
         console.error('An error occurred while fetching the pages:', e);
         return null;
