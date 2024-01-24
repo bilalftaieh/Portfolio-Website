@@ -19,11 +19,11 @@ export const SocialIconComponent = ({
   return (
     <Link href={social_link}>
       <div className="flex items-center gap-3">
-        {icon_url.length > 0 ? (
-          <Image src={icon_url} alt={social_name} width={width} height={height} />
-        ) : (
-          <i className={`${faType} ${faName}`} style={{ color: faColor }}></i>
-        )}
+      {icon_url.length > 0 ? (
+        <Image src={icon_url} alt={social_name} width={width} height={height} />
+      ) : faType && faName ? (
+        <i className={`${faType} ${faName}`} style={{ color: faColor }}></i>
+      ) : ''}
         <p className="line-clamp-1 hover:text-gray-500">{social_name}</p>
       </div>
     </Link>

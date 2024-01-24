@@ -48,6 +48,18 @@ const ProjectInfoSection: React.FC<{ infoHeader: string, infoDescription: string
 
 const ProjectsContainer: React.FC<{ projects: Project[] }> = ({ projects }) => {
     const [isVisible, setIsVisible] = useState<Record<string, boolean>>({});
+    
+    const visitButton = (buttonLink: string, buttonText: string) => {
+        const link = buttonLink.startsWith('https://') ? buttonLink : `https://${buttonLink}`;
+        return buttonLink.length > 0 ? 
+            <a href={link} className="text-white hover:bg-custom-one-light font-bold py-2 px-4 rounded">
+                {buttonText}
+            </a> : 
+            <p className="text-gray-400 cursor-default font-bold py-2 px-4 rounded">
+                {buttonText}
+            </p>;
+    }
+    
 
     useEffect(() => {
         // Initialize visibility state for each project
@@ -97,34 +109,31 @@ const ProjectsContainer: React.FC<{ projects: Project[] }> = ({ projects }) => {
                                 </div>
 
                                 <div className="flex gap-5 items-center">
-                                    <a href={project.project_github_link} className="hover:bg-custom-one-light text-white font-bold py-2 px-4 rounded">
-                                        Visit Repo
-                                    </a>
-                                    <a href={`https://${project.project_website_link}`} className="hover:bg-custom-one-light text-white font-bold py-2 px-4 rounded">
-                                        Visit Website
-                                    </a>
+                                    {visitButton(project.project_github_link,'Visit Repo')}
+                                    {visitButton(project.project_website_link,'Visit Website')}
                                 </div>
 
                             </div>
 
                             <div className="flex flex-col px-4 text-center md:text-start md:px-28 gap-5">
-                                <NextUIImage
+                                {project.project_screenshot.length > 0 ? <NextUIImage
                                     src={project.project_screenshot}
                                     width={1000}
                                     height={1000}
                                     shadow="sm"
-                                />
+                                /> : ''}
 
-                                <div className="flex flex-col gap-5">
+                                {project.project_overview.length > 0 ? <div className="flex flex-col gap-5">
                                     <p className="font-bold text-3xl ">
                                         Overview
                                     </p>
                                     <div className="text-gray-400"
                                         dangerouslySetInnerHTML={{ __html: sanitizeElement(project.project_description) }} />
 
-                                </div>
+                                </div> : ''}
+                                
 
-                                <div className="flex flex-col gap-5">
+                                {project.technologies_used.length > 0 ? <div className="flex flex-col gap-5">
                                     <p className="font-bold text-3xl ">
                                         Technologies Used
                                     </p>
@@ -147,7 +156,7 @@ const ProjectsContainer: React.FC<{ projects: Project[] }> = ({ projects }) => {
                                         })}
                                     </div>
 
-                                </div>
+                                </div> : ''}
 
 
                             </div>

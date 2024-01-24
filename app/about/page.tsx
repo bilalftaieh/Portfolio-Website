@@ -8,7 +8,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
     title: 'Belal Alfutayh | About',
     description: 'Belal Alfutayh About Page that includes his background and skills',
-  }
+}
 
 export default async function AboutPage() {
     const pages = await fetchPages();

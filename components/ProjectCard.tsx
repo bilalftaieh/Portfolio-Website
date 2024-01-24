@@ -29,16 +29,6 @@ export default function ProjectCard({ name, description, sourceLink, logo, sourc
       <CardBody>
         <p className="text-gray-400">{description}</p>
       </CardBody>
-      <Divider className="bg-white" />
-      {/* <CardFooter>
-        <Link
-          isExternal
-          showAnchorIcon
-          href={'/pro'}
-        >
-          View More
-        </Link>
-      </CardFooter> */}
     </Card>
   )
 }

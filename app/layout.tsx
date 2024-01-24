@@ -7,6 +7,7 @@ import Script from 'next/script'
 import { Divider } from '@nextui-org/react'
 import AppFooter from '@/components/AppFooter'
 import { fetchPages } from '@/lib/butterCmsApi'
+import { Analytics } from '@vercel/analytics/react';
 
 export const metadata: Metadata = {
   title: 'Belal Alfutayh | Portfolio Website',
@@ -40,7 +41,7 @@ export default async function RootLayout({
           <AppFooter data={footerPageData}/>
         </div>
         </Providers>
-        
+        <Analytics/>
         </body>
     </html>
   )
