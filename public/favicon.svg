@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- The same mark the nav wears: a boxed B, amber on ink, hairline border.
+       Drawn as one path rather than <text> so it renders identically
+       everywhere — a favicon never gets the webfont the page loads. The two
+       counters are subpaths of the same path, punched out by fill-rule. -->
+  <rect x="1.5" y="1.5" width="45" height="45" rx="11" fill="#070910" />
+  <rect x="1.5" y="1.5" width="45" height="45" rx="11" fill="none" stroke="#2b3446" stroke-width="1.5" />
+  <path
+    transform="translate(-1 0) translate(24 24) scale(1.16) translate(-24 -24)"
+    fill="#ff9d4d"
+    fill-rule="evenodd"
+    d="M16 13 H26.9 C30.4 13 32.5 15 32.5 18.2 C32.5 20.3 31.6 21.9 30 22.7 C32.5 23.4 34 25.4 34 28.4 C34 32.2 31.5 35 26.9 35 H16 Z
+       M21.5 17.3 H26.6 C27.8 17.3 28.4 18.1 28.4 19.45 C28.4 20.8 27.8 21.6 26.6 21.6 H21.5 Z
+       M21.5 25.4 H27.3 C28.7 25.4 29.4 26.3 29.4 28.05 C29.4 29.8 28.7 30.7 27.3 30.7 H21.5 Z"
+  />
+</svg>

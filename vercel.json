@@ -1,0 +1,16 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/api/v1/resume",
+      "has": [{ "type": "query", "key": "format", "value": "md" }],
+      "destination": "/api/v1/resume.md"
+    },
+    {
+      "source": "/api/v1/resume",
+      "has": [{ "type": "query", "key": "format", "value": "pdf" }],
+      "destination": "/Belal_Alfutayh_Resume_2026-08-16.pdf"
+    },
+    { "source": "/api/v1/resume", "destination": "/api/v1/resume.json" }
+  ]
+}

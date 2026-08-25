@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>OG image generator — Belal Alfutayh</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body { margin: 0; background: #070910; color: #b6c0d4; font: 13px ui-monospace, monospace; padding: 24px; }
+      canvas { width: 600px; height: 315px; border: 1px solid #2b3446; border-radius: 6px; display: block; }
+      button { margin-top: 16px; background: #ff9d4d; color: #070910; border: 0; border-radius: 999px; padding: 10px 18px; font: inherit; font-weight: 600; cursor: pointer; }
+      p { max-width: 600px; line-height: 1.6; color: #7b8599; }
+    </style>
+  </head>
+  <body>
+    <!--
+      Regenerates public/og-image.png (1200x630).
+
+      Why a browser and not a build step: the card is set in Bricolage Grotesque
+      and JetBrains Mono, and the only place those are available without adding
+      a native rasteriser dependency is a browser that has already loaded them.
+      Canvas text — not SVG — because an <img>-loaded SVG never gets webfonts,
+      so an SVG card would silently fall back to system-ui.
+
+      Usage: serve the repo (`npm run dev`) and open /scripts/og-image.html,
+      then click Download and save over public/og-image.png.
+
+      Social crawlers (X, LinkedIn, Slack, iMessage) do not render SVG
+      og:image, which is why this outputs a raster.
+    -->
+    <canvas id="c" width="1200" height="630"></canvas>
+    <button id="dl">Download og-image.png</button>
+    <p>Save the result over <code>public/og-image.png</code>.</p>
+
+    <script>
+      const C = {
+        bg: '#070910',
+        border: '#1b2130',
+        borderHi: '#2b3446',
+        accent: '#ff9d4d',
+        accentSoft: '#ffcb99',
+        accentDeep: '#c25e14',
+        signal: '#34d399',
+        text: '#b6c0d4',
+        muted: '#7b8599',
+        heading: '#f4f6fb',
+        surface: '#10141f',
+        codeString: '#9fd8a8',
+        codeNumber: '#ffb454',
+      }
+
+      const W = 1200
+      const H = 630
+      const PAD = 80
+
+      const DISPLAY = '"Bricolage Grotesque", system-ui, sans-serif'
+      const MONO = '"JetBrains Mono", ui-monospace, monospace'
+
+      /** Tracked, uppercased mono — the site's `.meta` voice. */
+      function meta(ctx, text, x, y, { size = 15, color = C.muted, spacing = '0.18em' } = {}) {
+        ctx.save()
+        ctx.font = `500 ${size}px ${MONO}`
+        ctx.letterSpacing = spacing
+        ctx.fillStyle = color
+        ctx.textBaseline = 'alphabetic'
+        ctx.fillText(text.toUpperCase(), x, y)
+        const w = ctx.measureText(text.toUpperCase()).width
+        ctx.restore()
+        return w
+      }
+
+      function roundRect(ctx, x, y, w, h, r) {
+        ctx.beginPath()
+        ctx.moveTo(x + r, y)
+        ctx.arcTo(x + w, y, x + w, y + h, r)
+        ctx.arcTo(x + w, y + h, x, y + h, r)
+        ctx.arcTo(x, y + h, x, y, r)
+        ctx.arcTo(x, y, x + w, y, r)
+        ctx.closePath()
+      }
+
+      /** The 24/96px engineering grid from Atmosphere.jsx, faded top-down. */
+      function grid(ctx) {
+        const g = ctx.createLinearGradient(0, 0, 0, H)
+        g.addColorStop(0, 'rgba(148,170,214,0.30)')
+        g.addColorStop(1, 'rgba(148,170,214,0)')
+
+        ctx.save()
+        ctx.globalCompositeOperation = 'source-over'
+        const draw = (step, alpha) => {
+          ctx.save()
+          ctx.globalAlpha = alpha
+          ctx.strokeStyle = g
+          ctx.lineWidth = 1
+          ctx.beginPath()
+          for (let x = 0; x <= W; x += step) {
+            ctx.moveTo(x + 0.5, 0)
+            ctx.lineTo(x + 0.5, H)
+          }
+          for (let y = 0; y <= H; y += step) {
+            ctx.moveTo(0, y + 0.5)
+            ctx.lineTo(W, y + 0.5)
+          }
+          ctx.stroke()
+          ctx.restore()
+        }
+        draw(24, 0.1)
+        draw(96, 0.18)
+        ctx.restore()
+      }
+
+      /** Warm high, cold low — the page's light direction. */
+      function washes(ctx) {
+        const warm = ctx.createRadialGradient(W - 120, -60, 0, W - 120, -60, 620)
+        warm.addColorStop(0, 'rgba(255,157,77,0.22)')
+        warm.addColorStop(1, 'rgba(255,157,77,0)')
+        ctx.fillStyle = warm
+        ctx.fillRect(0, 0, W, H)
+
+        const cold = ctx.createRadialGradient(-40, H + 80, 0, -40, H + 80, 560)
+        cold.addColorStop(0, 'rgba(76,110,190,0.20)')
+        cold.addColorStop(1, 'rgba(76,110,190,0)')
+        ctx.fillStyle = cold
+        ctx.fillRect(0, 0, W, H)
+      }
+
+      /** The boxed B from the nav, drawn as paths (same geometry as favicon.svg). */
+      function mark(ctx, x, y, size) {
+        const s = size / 48
+        ctx.save()
+        ctx.translate(x, y)
+        ctx.scale(s, s)
+
+        roundRect(ctx, 1.5, 1.5, 45, 45, 11)
+        ctx.fillStyle = 'rgba(16,20,31,0.9)'
+        ctx.fill()
+        ctx.strokeStyle = C.borderHi
+        ctx.lineWidth = 1.5
+        ctx.stroke()
+
+        ctx.translate(-1, 0)
+        ctx.translate(24, 24)
+        ctx.scale(1.16, 1.16)
+        ctx.translate(-24, -24)
+
+        const p = new Path2D(
+          'M16 13 H26.9 C30.4 13 32.5 15 32.5 18.2 C32.5 20.3 31.6 21.9 30 22.7 C32.5 23.4 34 25.4 34 28.4 C34 32.2 31.5 35 26.9 35 H16 Z' +
+            'M21.5 17.3 H26.6 C27.8 17.3 28.4 18.1 28.4 19.45 C28.4 20.8 27.8 21.6 26.6 21.6 H21.5 Z' +
+            'M21.5 25.4 H27.3 C28.7 25.4 29.4 26.3 29.4 28.05 C29.4 29.8 28.7 30.7 27.3 30.7 H21.5 Z',
+        )
+        ctx.fillStyle = C.accent
+        ctx.fill(p, 'evenodd')
+        ctx.restore()
+      }
+
+      /** Full-bleed hairline, brightest across the content column, with crop ticks. */
+      function seam(ctx, y) {
+        const g = ctx.createLinearGradient(0, 0, W, 0)
+        g.addColorStop(0, 'rgba(27,33,48,0)')
+        g.addColorStop(0.12, C.border)
+        g.addColorStop(0.5, C.borderHi)
+        g.addColorStop(0.88, C.border)
+        g.addColorStop(1, 'rgba(27,33,48,0)')
+        ctx.fillStyle = g
+        ctx.fillRect(0, y, W, 1)
+
+        ctx.fillStyle = C.borderHi
+        ctx.fillRect(PAD, y, 1, 8)
+        ctx.fillRect(W - PAD - 1, y, 1, 8)
+      }
+
+      /* The card is left-weighted by design, so the right half carries the
+         résumé-as-an-endpoint conceit the Résumé section is built on — the
+         same panel treatment as .card, down to the top-edge hairline. */
+      function panel(ctx) {
+        const x = 648
+        const y = 190
+        const w = 472
+        const h = 300
+        const r = 14
+        const PX = 24
+
+        roundRect(ctx, x, y, w, h, r)
+        ctx.save()
+        ctx.clip()
+        const fill = ctx.createLinearGradient(0, y, 0, y + h)
+        fill.addColorStop(0, 'rgba(21,26,39,0.92)')
+        fill.addColorStop(0.6, 'rgba(16,20,31,0.78)')
+        ctx.fillStyle = fill
+        ctx.fillRect(x, y, w, h)
+
+        // Header strip, then the hairline that separates it from the body.
+        ctx.fillStyle = 'rgba(11,14,24,0.85)'
+        ctx.fillRect(x, y, w, 40)
+        ctx.fillStyle = C.border
+        ctx.fillRect(x, y + 40, w, 1)
+        ctx.restore()
+
+        roundRect(ctx, x + 0.5, y + 0.5, w - 1, h - 1, r)
+        ctx.strokeStyle = C.border
+        ctx.lineWidth = 1
+        ctx.stroke()
+
+        // .card::before — a highlight that dies before either corner.
+        const hi = ctx.createLinearGradient(x, 0, x + w, 0)
+        hi.addColorStop(0, 'rgba(43,52,70,0)')
+        hi.addColorStop(0.22, 'rgba(58,68,88,0.9)')
+        hi.addColorStop(0.78, 'rgba(58,68,88,0.9)')
+        hi.addColorStop(1, 'rgba(43,52,70,0)')
+        ctx.fillStyle = hi
+        ctx.fillRect(x + r, y + 1, w - r * 2, 1)
+
+        meta(ctx, 'GET /api/v1/resume', x + PX, y + 26, { size: 13, color: C.muted, spacing: '0.12em' })
+        const okX = x + w - PX
+        ctx.save()
+        ctx.font = `500 13px ${MONO}`
+        ctx.letterSpacing = '0.12em'
+        const ok = '200 OK'
+        const okW = ctx.measureText(ok).width
+        ctx.restore()
+        meta(ctx, ok, okX - okW, y + 26, { size: 13, color: C.signal, spacing: '0.12em' })
+
+        const lines = [
+          [{ t: '$ ', c: C.accent }, { t: 'curl -s /api/v1/resume', c: C.text }],
+          [],
+          [{ t: '{', c: C.muted }],
+          [{ t: '  "name"', c: C.accentSoft }, { t: ': ', c: C.muted }, { t: '"Belal Alfutayh"', c: C.codeString }, { t: ',', c: C.muted }],
+          [{ t: '  "role"', c: C.accentSoft }, { t: ': ', c: C.muted }, { t: '"Cloud & API Integration"', c: C.codeString }, { t: ',', c: C.muted }],
+          [{ t: '  "certs"', c: C.accentSoft }, { t: ': ', c: C.muted }, { t: '4', c: C.codeNumber }, { t: ',', c: C.muted }],
+          [{ t: '  "stack"', c: C.accentSoft }, { t: ': ', c: C.muted }, { t: '["apigee", "gcp"]', c: C.codeString }, { t: ',', c: C.muted }],
+          [{ t: '  "status"', c: C.accentSoft }, { t: ': ', c: C.muted }, { t: '"operational"', c: C.codeString }],
+          [{ t: '}', c: C.muted }],
+        ]
+
+        ctx.save()
+        ctx.font = `400 15px ${MONO}`
+        ctx.textBaseline = 'alphabetic'
+        lines.forEach((spans, i) => {
+          let cx = x + PX
+          const cy = y + 76 + i * 25
+          spans.forEach((span) => {
+            ctx.fillStyle = span.c
+            ctx.fillText(span.t, cx, cy)
+            cx += ctx.measureText(span.t).width
+          })
+        })
+        ctx.restore()
+      }
+
+      function draw() {
+        const ctx = document.getElementById('c').getContext('2d')
+
+        ctx.fillStyle = C.bg
+        ctx.fillRect(0, 0, W, H)
+        grid(ctx)
+        washes(ctx)
+
+        // ── Header band ─────────────────────────────────────────────────────
+        mark(ctx, PAD, 62, 46)
+
+        ctx.font = `600 25px ${DISPLAY}`
+        ctx.letterSpacing = '-0.02em'
+        ctx.fillStyle = C.heading
+        ctx.textBaseline = 'alphabetic'
+        ctx.fillText('Alfutayh', PAD + 62, 94)
+        const wmW = ctx.measureText('Alfutayh').width
+        ctx.fillStyle = C.accent
+        ctx.fillText('.', PAD + 62 + wmW, 94)
+        ctx.letterSpacing = '0px'
+
+        // Live dot + label, right-aligned in the header band.
+        ctx.save()
+        ctx.font = `500 15px ${MONO}`
+        ctx.letterSpacing = '0.18em'
+        const statusText = 'OPERATIONAL'
+        const statusW = ctx.measureText(statusText).width
+        ctx.restore()
+        const statusX = W - PAD - statusW
+        ctx.beginPath()
+        ctx.arc(statusX - 18, 88, 4, 0, Math.PI * 2)
+        ctx.fillStyle = C.signal
+        ctx.fill()
+        meta(ctx, statusText, statusX, 94, { color: C.signal })
+
+        seam(ctx, 150)
+        meta(ctx, '01 / Portfolio', PAD, 186, { color: C.muted })
+
+        panel(ctx)
+
+        // ── Name ────────────────────────────────────────────────────────────
+        ctx.font = `600 118px ${DISPLAY}`
+        ctx.letterSpacing = '-0.045em'
+        ctx.fillStyle = C.heading
+        ctx.fillText('Belal', PAD, 318)
+        ctx.fillText('Alfutayh', PAD, 426)
+        ctx.letterSpacing = '0px'
+
+        // ── Gradient rule ───────────────────────────────────────────────────
+        const rule = ctx.createLinearGradient(PAD, 0, PAD + 420, 0)
+        rule.addColorStop(0, C.accent)
+        rule.addColorStop(0.45, 'rgba(255,157,77,0.4)')
+        rule.addColorStop(1, 'rgba(255,157,77,0)')
+        ctx.fillStyle = rule
+        ctx.fillRect(PAD, 466, 420, 1)
+
+        // ── Title, in the accent gradient ───────────────────────────────────
+        ctx.font = `500 36px ${DISPLAY}`
+        ctx.letterSpacing = '-0.02em'
+        const title = 'Cloud & API Integration'
+        const tw = ctx.measureText(title).width
+        const tg = ctx.createLinearGradient(PAD, 0, PAD + tw, 0)
+        tg.addColorStop(0, C.accentSoft)
+        tg.addColorStop(0.45, C.accent)
+        tg.addColorStop(1, C.accentDeep)
+        ctx.fillStyle = tg
+        ctx.fillText(title, PAD, 516)
+        ctx.letterSpacing = '0px'
+
+        // ── Footer specs ────────────────────────────────────────────────────
+        const specs = ['GCP Certified (ACE)', 'Apigee', 'Google Cloud', 'Riyadh, SA']
+        let x = PAD
+        specs.forEach((spec, i) => {
+          if (i > 0) {
+            ctx.fillStyle = C.borderHi
+            ctx.fillRect(x, 556, 1, 12)
+            x += 21
+          }
+          x += meta(ctx, spec, x, 567, { size: 15, color: i === 0 ? C.text : C.muted }) + 21
+        })
+
+        window.__ogReady = true
+      }
+
+      document.fonts
+        .load(`600 118px ${DISPLAY}`)
+        .then(() => document.fonts.load(`500 36px ${DISPLAY}`))
+        .then(() => document.fonts.load(`500 15px ${MONO}`))
+        .then(() => document.fonts.ready)
+        .then(draw)
+
+      document.getElementById('dl').addEventListener('click', () => {
+        const a = document.createElement('a')
+        a.href = document.getElementById('c').toDataURL('image/png')
+        a.download = 'og-image.png'
+        a.click()
+      })
+    </script>
+  </body>
+</html>
